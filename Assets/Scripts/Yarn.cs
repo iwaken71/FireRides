@@ -13,12 +13,12 @@ public class Yarn : MonoBehaviour {
     public bool isAlive{get;private set;}
     public bool isReady = true;
 
-    void Start(){
+    void Start ()
+    {
         isAlive = true;
         isReady = true;
         power = Vector3.zero;
     }
-
 
     void Update ()
     {

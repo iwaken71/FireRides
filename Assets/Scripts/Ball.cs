@@ -27,7 +27,6 @@ public class Ball : MonoBehaviour {
         y = transform.position.y;
         yarn = GetComponentInChildren<Yarn>();
         power = Vector3.zero;
-
         CastRay(new Vector3(0,1,0));
     }
 
