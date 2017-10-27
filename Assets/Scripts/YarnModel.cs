@@ -7,7 +7,7 @@ public class YarnModel{
 
     public Vector3ReactiveProperty UpperPoint;
     public Vector3ReactiveProperty OriginPoint;
-    //float timer;
+    public float timer;
     //public Vector3 power{get;private set;}
 
 
@@ -22,15 +22,17 @@ public class YarnModel{
         state = new YarnStateReactiveProperty(YarnState.Ready);
         UpperPoint = new Vector3ReactiveProperty(upperPoint);
         OriginPoint = new Vector3ReactiveProperty(originPoint);
+        timer = 0;
     }
     public YarnModel ()
     {
         state = new YarnStateReactiveProperty(YarnState.Ready);
         UpperPoint = new Vector3ReactiveProperty(Vector3.zero);
         OriginPoint = new Vector3ReactiveProperty(Vector3.zero);
+        timer = 0;
     }
 
-    public void SetState ( YarnState input)
+    public void SetState (YarnState input)
     {
         state.Value = input;
     }
