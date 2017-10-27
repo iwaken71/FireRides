@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class YarnView : MonoBehaviour {
-
+/*
     LineRenderer lr;
     Yarn yarn;
     [SerializeField]GameObject bar;
@@ -42,4 +42,5 @@ public class YarnView : MonoBehaviour {
         bar.transform.localScale = new Vector3(0.0f,length,0.05f);
 
     }
+    */
 }

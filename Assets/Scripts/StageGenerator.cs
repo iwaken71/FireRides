@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class StageGenerator : MonoBehaviour {
     [SerializeField]GameObject WallPrefab;
-    public Ball ball;
+    public GameObject ball;
 
   
 
