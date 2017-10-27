@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class YarnView : MonoBehaviour {
 
-   // LineRenderer lr;
+    LineRenderer lr;
     Yarn yarn;
     [SerializeField]GameObject bar;
 
@@ -12,24 +12,24 @@ public class YarnView : MonoBehaviour {
     void Start(){
         yarn = GetComponent<Yarn>();
 
-        //lr = gameObject.AddComponent<LineRenderer>();
+        lr = gameObject.GetComponent<LineRenderer>();
     }
 	
 	// Update is called once per frame
 	void LateUpdate ()
     {
         if (yarn.isAlive) {
-//            lr.enabled = true;
-//            lr.SetPosition(0,yarn.UpperPoint);
-//            lr.SetPosition(1,yarn.OriginPoint);
-//            lr.startWidth = 0.1f;
-//            lr.endWidth = 0.1f;
-            bar.SetActive(true);
+            lr.enabled = true;
+            lr.SetPosition(0,yarn.UpperPoint);
+            lr.SetPosition(1,yarn.OriginPoint);
+            lr.startWidth = 0.1f;
+            lr.endWidth = 0.1f;
+            //bar.SetActive(true);
             SetBarPosition(yarn.UpperPoint,yarn.OriginPoint);
            
         } else {
-           // lr.enabled = false;
-           bar.SetActive(false);
+           lr.enabled = false;
+           //bar.SetActive(false);
         }
 		
 	}
@@ -39,7 +39,7 @@ public class YarnView : MonoBehaviour {
         bar.transform.position = center;
         bar.transform.up = upper-lower;
         float length = Vector3.Distance(upper,lower);
-        bar.transform.localScale = new Vector3(0.05f,length,0.05f);
+        bar.transform.localScale = new Vector3(0.0f,length,0.05f);
 
     }
 }
