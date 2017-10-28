@@ -7,6 +7,7 @@ public class YarnModel{
 
     public Vector3ReactiveProperty UpperPoint;
     public Vector3ReactiveProperty OriginPoint;
+    public ReadOnlyReactiveProperty<Vector3> Point;// 
     public float timer;
     //public Vector3 power{get;private set;}
 
@@ -23,6 +24,7 @@ public class YarnModel{
         UpperPoint = new Vector3ReactiveProperty(upperPoint);
         OriginPoint = new Vector3ReactiveProperty(originPoint);
         timer = 0;
+        //Point = Observable.CombineLatest(UpperPoint, OriginPoint, (x, y) => x + y).ToReadOnlyReactiveProperty();
     }
     public YarnModel ()
     {
@@ -30,6 +32,7 @@ public class YarnModel{
         UpperPoint = new Vector3ReactiveProperty(Vector3.zero);
         OriginPoint = new Vector3ReactiveProperty(Vector3.zero);
         timer = 0;
+        //Point = Observable.CombineLatest(UpperPoint, OriginPoint, (x, y) => x + y).ToReadOnlyReactiveProperty();
     }
 
     public void SetState (YarnState input)

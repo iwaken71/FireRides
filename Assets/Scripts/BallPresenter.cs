@@ -7,6 +7,7 @@ public class BallPresenter : MonoBehaviour {
 
     BallModel ballModel;
     YarnModel yarnModel;
+    [SerializeField]YarnView yarnView;
 
     //float timer = 0;
     void Awake ()
@@ -29,13 +30,22 @@ public class BallPresenter : MonoBehaviour {
     }
 
     void ClickDown(){
-        Vector3 dir = new Vector3 (1, 1, 0);
+        Vector3 dir = new Vector3 (1, 1.5f, 0);
+       // Debug.Log(2);
 
         if (IsHitRay (dir)) {
+            yarnModel.SetState(YarnState.Active);
             yarnModel.SetUpperPoint(GetRayPoint(dir));
             yarnModel.SetOriginPoint(this.transform.position);
-            yarnModel.SetState(YarnState.Active);
+            yarnView.enabled = true;
+
         }
+    }
+
+    void ClickUp(){
+        yarnModel.SetState(YarnState.NonActive);
+        yarnView.enabled = false;
+       // Debug.Log(3);
     }
 
     Vector3 Power ()
@@ -45,20 +55,23 @@ public class BallPresenter : MonoBehaviour {
             float cos = Vector3.Dot ((yarnModel.OriginPoint.Value - yarnModel.UpperPoint.Value).normalized, Vector3.down);
             power = (yarnModel.UpperPoint.Value - yarnModel.OriginPoint.Value).normalized * Const.gravity * cos;
         } else if (yarnModel.State.Value == YarnState.Active) {
-            if (yarnModel.timer <= 0.25f) {
-                yarnModel.timer += Time.deltaTime;
-            }
+            Debug.Log(yarnModel.timer);
+            float timer = Mathf.Clamp(yarnModel.timer,0,0.25f);
+           // Debug.Log(timer);
+               
+            
             float cos = Vector3.Dot ((yarnModel.OriginPoint.Value - yarnModel.UpperPoint.Value).normalized, Vector3.down);
             power = (yarnModel.UpperPoint.Value - yarnModel.OriginPoint.Value).normalized * Const.gravity * cos * (yarnModel.timer * 6f + 1);
         }
 
         power += new Vector3 (0, -Const.gravity, 0);
+        //Debug.Log(power);
         return power;
     }
 
-    void ClickUp(){
-        yarnModel.SetState(YarnState.NonActive);
-    }
+ 
+
+   
 
     void Init ()
     {
@@ -71,10 +84,12 @@ public class BallPresenter : MonoBehaviour {
         
         Vector3 dir = new Vector3 (0, 1, 0);
         if (IsHitRay (dir)) {
-            yarnModel.SetUpperPoint(GetRayPoint(dir));
-            yarnModel.SetOriginPoint(this.transform.position);
+            yarnModel.SetUpperPoint (GetRayPoint (dir));
+
+            yarnModel.SetOriginPoint (this.transform.position);
+        } else {
+            yarnModel.SetOriginPoint (this.transform.position);
         }
-        yarnModel.SetOriginPoint(this.transform.position);
 
 
         var updateStream = Observable.EveryUpdate ();
@@ -82,18 +97,35 @@ public class BallPresenter : MonoBehaviour {
         .Where(_ => yarnModel.State.Value == YarnState.Active)
         .Subscribe(_ => {
             yarnModel.timer += Time.deltaTime;
-        });
+         }).AddTo(gameObject);
 
         yarnModel.State
         .Where(s => s == YarnState.NonActive)
         .Subscribe(_ => {
             yarnModel.timer = 0;
-        });
+            yarnView.enabled = false;
+         
+        }).AddTo(gameObject);
 
         Observable.EveryFixedUpdate().Subscribe(_ =>{
-            ballModel.PositionUpdate(Power ());
-            transform.position = new Vector3(ballModel.x,ballModel.y,0);
+            if(ballModel != null){
+                ballModel.PositionUpdate(Power (),Time.fixedDeltaTime);
+                transform.position = ballModel.Pos.Value;
+                yarnModel.SetOriginPoint(ballModel.Pos.Value);
+            }
+        }).AddTo(gameObject);
+
+        Observable.EveryLateUpdate().Subscribe(_ =>{
+            
+
+            yarnView.SetYarnPosition(yarnModel.UpperPoint.Value,yarnModel.OriginPoint.Value);
+           
+            //Debug.Log(1);
         });
+      
+
+
+
     }
 
     bool IsHitRay (Vector3 dir)
@@ -114,6 +146,7 @@ public class BallPresenter : MonoBehaviour {
         RaycastHit hit;
 //        Debug.Log(ray);
         if (Physics.Raycast (ray, out hit,30)) {
+            
             return hit.point;
           //  Debug.Log(hit.collider.name);
         }

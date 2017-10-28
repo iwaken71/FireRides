@@ -5,11 +5,13 @@ using UniRx;
 
 public class BallModel{
 
-    public float x {get; private set;}
-    public float y {get; private set;}
-    FloatReactiveProperty vx,vy;
-    FloatReactiveProperty ax,ay;
-    [SerializeField]float m;
+
+    Vector3ReactiveProperty pos;
+    Vector3 vel;
+    Vector3 accel;
+    float m;
+
+    public IReadOnlyReactiveProperty<Vector3> Pos{ get { return pos;}}
 
 
 
@@ -19,12 +21,10 @@ public class BallModel{
 
     public BallModel (Vector3 startPosition)
     {
-        x = startPosition.x;
-        y = startPosition.y;
-        ax = new FloatReactiveProperty(0);
-        ay = new FloatReactiveProperty(0);
-        vx = new FloatReactiveProperty(0);
-        vy = new FloatReactiveProperty(0);
+        pos = new Vector3ReactiveProperty(startPosition);
+        vel = Vector3.zero;
+        accel = Vector3.zero;
+        m = 1;
 
         //power = new Vector3ReactiveProperty(Vector3.zero);
     }
@@ -84,17 +84,15 @@ public class BallModel{
 
     }*/
 
-    public void PositionUpdate (Vector3 power)
+    public void PositionUpdate (Vector3 power,float deltaTime)
     {
+        accel = power/m;
+        vel += accel*deltaTime;
 
-        ax.Value = power.x/m;
-        ay.Value = power.y/m;
+        pos.Value += vel*deltaTime; 
 
-        vx.Value += ax.Value * Time.fixedDeltaTime;
-        vy.Value += ay.Value * Time.fixedDeltaTime;
-
-        x += vx.Value * Time.fixedDeltaTime;
-        y += vy.Value * Time.fixedDeltaTime;
+        //x += vx.Value * deltaTime;
+        //y += vy.Value * deltaTime;
     }
 
     /*
