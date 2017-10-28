@@ -25,7 +25,7 @@ public class YarnView : MonoBehaviour {
             lr.startWidth = 0.1f;
             lr.endWidth = 0.1f;
             //bar.SetActive(true);
-            SetBarPosition(yarn.UpperPoint,yarn.OriginPoint);
+            //SetBarPosition(yarn.UpperPoint,yarn.OriginPoint);
            
         } else {
            lr.enabled = false;
